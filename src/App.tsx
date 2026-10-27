@@ -1,6 +1,7 @@
 
 
 import { useState } from "react";
+import ApiStatus from './ApiStatus';
 const growers = [
   {
     name: "Hill Country Blooms",
@@ -243,6 +244,7 @@ export default function App() {
         </section>
       </main>
       <footer className="wrap footer">
+        <ApiStatus />
         <a href="#" className="brand">
           ✳ Flora<span>Connect</span>
         </a>

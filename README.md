@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173, or the URL printed by Vite. No backend, database, external fonts, or environment variables are required.
+Open http://localhost:5173, or the URL printed by Vite. Run the backend with `npm run dev` in FloraConnect-Backend to enable the live connection status. The sample page remains usable when the backend is unavailable.
 
 ## Checks and production preview
 
@@ -35,3 +35,7 @@ Grower profiles are sample content. The join button shows a coming-soon message 
 For Vercel, select the Vite framework preset, use `npm run build`, and set the output directory to `dist`.
 
 `.gitignore` excludes dependencies, build output, caches, local environment files, logs, editor settings, and test reports. Keep `package-lock.json` committed for reproducible installations.
+
+## Backend connection
+
+The footer checks `/api/health` with a ten-second timeout and offers Retry on failure. Development defaults to `http://localhost:3001/api`; production defaults to `https://flora-connect-backend-gules.vercel.app/api`. Override the base URL with `VITE_API_BASE_URL` in `.env.local` or Vercel environment settings, then restart/rebuild. Include `/api` in the URL. Do not put secrets in VITE variables. No environment changes are needed for the current production domains. Preview deployments require their exact origin to be allowed by the backend.

@@ -681,3 +681,8 @@ h3 {
     transition: none !important;
   }
 }
+
+.api-status { display: flex; align-items: center; gap: 10px; flex-basis: 100%; font-size: 11px; color: var(--muted); }
+.api-status.connected { color: var(--green); }
+.api-status button { border: 1px solid var(--border); border-radius: 4px; padding: 4px 9px; background: transparent; color: var(--foreground); }
+.footer { flex-wrap: wrap; }
