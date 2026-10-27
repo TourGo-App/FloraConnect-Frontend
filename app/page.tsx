@@ -1,69 +1,254 @@
+﻿"use client";
 import Image from "next/image";
-
+import { useState } from "react";
+const growers = [
+  {
+    name: "Hill Country Blooms",
+    place: "Nuwara Eliya",
+    type: "Cut flowers",
+    flower: "✿",
+    color: "peach",
+    text: "Fresh stems, grown with care in the cool hill country.",
+  },
+  {
+    name: "Orchid Grove",
+    place: "Kandy",
+    type: "Orchids",
+    flower: "❀",
+    color: "lilac",
+    text: "A little patience. A lot of love. Extraordinary orchids.",
+  },
+  {
+    name: "Green Leaf Nursery",
+    place: "Gampaha",
+    type: "Plants",
+    flower: "❧",
+    color: "sage",
+    text: "Bring a little more green into your everyday life.",
+  },
+];
 export default function Home() {
+  const [filter, setFilter] = useState("All growers");
+  const [search, setSearch] = useState("");
+  const [joined, setJoined] = useState(false);
+  const visible = growers.filter(
+    (g) =>
+      (filter === "All growers" || g.type === filter) &&
+      `${g.name} ${g.place} ${g.type}`
+        .toLowerCase()
+        .includes(search.toLowerCase()),
+  );
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <>
+      <div className="announcement">
+        Rooted in Sri Lanka. Growing together. &nbsp; ✳
+      </div>
+      <header className="wrap header">
+        <a className="brand" href="#">
+          ✳ Flora<span>Connect</span>
+        </a>
+        <nav aria-label="Main navigation">
+          <a href="#discover">Discover growers</a>
+          <a href="#about">Our story</a>
+          <a href="#community">Community</a>
+        </nav>
+        <a className="button small" href="#community">
+          Let’s grow together ↗
+        </a>
+      </header>
+      <main>
+        <section className="wrap hero">
+          <div>
+            <p className="eyebrow">● &nbsp; A PLACE FOR PEOPLE WHO GROW</p>
+            <h1>
+              Good things
+              <br />
+              grow <em>together.</em>
+            </h1>
+            <p className="intro">
+              Connecting Sri Lanka’s flower growers, plant lovers, and local
+              communities. Find your people. Share your passion. Watch it bloom.
+            </p>
+            <div className="actions">
+              <a className="button" href="#discover">
+                Explore the community <span>↗</span>
+              </a>
+              <a className="text-link" href="#about">
+                Get to know us →
+              </a>
+            </div>
+            <div className="community-note">
+              <div className="avatars" aria-hidden="true">
+                <span>NS</span>
+                <span>AP</span>
+                <span>KM</span>
+              </div>
+              <p>
+                Small beginnings.
+                <br />
+                <strong>Endless possibilities.</strong>
+              </p>
+            </div>
+          </div>
+          <div className="hero-visual">
             <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+              src="/images/flowers.jpg"
+              alt="Delicate pink blossoms reaching toward the sunlight"
+              fill
+              priority
+              sizes="(max-width: 760px) 100vw, 50vw"
+              className="hero-photo"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <span className="image-label">GROW LOCAL. BLOOM TOGETHER.</span>
+            <div className="floating-note">
+              <span>✿</span>
+              <p>
+                A little connection.
+                <br />
+                <strong>A whole lot of growth.</strong>
+              </p>
+            </div>
+          </div>
+        </section>
+        <div className="values-strip">
+          <div className="wrap values">
+            <span>Rooted in connection</span>
+            <b>✳</b>
+            <span>Grown with care</span>
+            <b>✳</b>
+            <span>Inspired by nature</span>
+            <b>✳</b>
+            <span>Proudly Sri Lankan</span>
+          </div>
         </div>
+        <section id="discover" className="wrap discover">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">MEET YOUR GROWING COMMUNITY</p>
+              <h2>
+                Discover something <em>lovely.</em>
+              </h2>
+            </div>
+            <p>
+              From hillside nurseries to backyard gardens,
+              <br />
+              there’s a story behind every bloom.
+            </p>
+          </div>
+          <div className="filter-bar">
+            <div className="filters" aria-label="Filter growers">
+              {["All growers", "Cut flowers", "Orchids", "Plants"].map(
+                (item) => (
+                  <button
+                    key={item}
+                    className={filter === item ? "filter active" : "filter"}
+                    aria-pressed={filter === item}
+                    onClick={() => setFilter(item)}
+                  >
+                    {item}
+                  </button>
+                ),
+              )}
+            </div>
+            <label className="search">
+              <span aria-hidden="true">⌕</span>
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Find a grower or location"
+                aria-label="Find a grower or location"
+              />
+            </label>
+          </div>
+          <p className="sample-label">
+            A peek at what’s possible · Sample grower profiles
+          </p>
+          <div className="grower-grid">
+            {visible.map((g) => (
+              <article className="grower-card" key={g.name}>
+                <div className={`grower-art ${g.color}`}>
+                  <span className="tag">{g.type}</span>
+                  <span className="flower" aria-hidden="true">
+                    {g.flower}
+                  </span>
+                  <span className="art-caption">GROWN WITH LOVE</span>
+                </div>
+                <div className="card-copy">
+                  <p className="location">↗ {g.place}, Sri Lanka</p>
+                  <h3>{g.name}</h3>
+                  <p>{g.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+          {visible.length === 0 && (
+            <div className="empty-state">
+              <p>No sample growers match your search.</p>
+              <button
+                className="text-link"
+                onClick={() => {
+                  setSearch("");
+                  setFilter("All growers");
+                }}
+              >
+                Show all growers →
+              </button>
+            </div>
+          )}
+        </section>
+        <section id="about" className="wrap about">
+          <span className="about-symbol" aria-hidden="true">
+            ✳
+          </span>
+          <div>
+            <p className="eyebrow">MORE THAN FLOWERS</p>
+            <h2>
+              A community with
+              <br />
+              <em>room to grow.</em>
+            </h2>
+          </div>
+          <div>
+            <p>
+              We believe the best things happen when people connect.
+              FloraConnect is a space for Sri Lankan growers, associations, and
+              enthusiasts to learn from each other and celebrate what they love.
+            </p>
+            <a className="text-link" href="#community">
+              Put down roots with us ↗
+            </a>
+          </div>
+        </section>
+        <section id="community" className="wrap join">
+          <span className="join-flower" aria-hidden="true">
+            ❀
+          </span>
+          <p className="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
+          <h2>
+            Let’s make something <em>bloom.</em>
+          </h2>
+          <p>
+            Grower, dreamer, or just getting your hands in the soil?
+            <br />
+            There’s a place for you here.
+          </p>
+          <button className="button cream" onClick={() => setJoined(true)}>
+            Join the community ↗
+          </button>
+          <p className="join-status" role="status">
+            {joined
+              ? "Thanks for your interest! Community registration is coming soon."
+              : "A growing idea. An open invitation."}
+          </p>
+        </section>
       </main>
-    </div>
+      <footer className="wrap footer">
+        <a href="#" className="brand">
+          ✳ Flora<span>Connect</span>
+        </a>
+        <p>Made for people. Inspired by nature.</p>
+        <span>© 2026 FloraConnect · Sample website</span>
+      </footer>
+    </>
   );
 }
