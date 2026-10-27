@@ -1,5 +1,5 @@
-﻿"use client";
-import Image from "next/image";
+
+
 import { useState } from "react";
 const growers = [
   {
@@ -27,7 +27,7 @@ const growers = [
     text: "Bring a little more green into your everyday life.",
   },
 ];
-export default function Home() {
+export default function App() {
   const [filter, setFilter] = useState("All growers");
   const [search, setSearch] = useState("");
   const [joined, setJoined] = useState(false);
@@ -91,11 +91,11 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-visual">
-            <Image
+            <img
               src="/images/flowers.jpg"
               alt="Delicate pink blossoms reaching toward the sunlight"
-              fill
-              priority
+              width={1400}
+              height={1000}
               sizes="(max-width: 760px) 100vw, 50vw"
               className="hero-photo"
             />
