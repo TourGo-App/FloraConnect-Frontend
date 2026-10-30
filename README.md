@@ -23,8 +23,8 @@ The production build is generated in `dist/`. `npm start` is also available as a
 
 ## Files
 
-- `src/App.tsx`: home page and local grower search/category filtering.
-- `src/index.css`: responsive styles.
+- `src/pages/home/HomePage.tsx`: reference-inspired home page, local flower search/category filtering, flower detail dialogs and responsive navigation.
+- `src/styles/global.css`: responsive styles.
 - `src/main.tsx`: React entry point.
 - `index.html`: document title and metadata.
 - `vite.config.ts`: Vite, React, and Tailwind configuration.
@@ -45,3 +45,13 @@ The footer checks `/api/health` with a ten-second timeout and offers Retry on fa
 Copyright (c) 2026 TourGo organization. All rights reserved.
 
 No use, copying, modification, distribution, or sublicensing is permitted without prior written permission from TourGo organization. See [LICENSE](LICENSE).
+
+## Home page design
+
+The botanical homepage includes a custom SVG wordmark, an AI-generated grower hero, six illustrative flower cards, responsive navigation, search/filter controls and accessible native dialogs. Login, registration, associations, notices, marketplace and events show clearly marked previews until their APIs are implemented. Existing API health checking remains in the footer.
+
+Images are served locally from `public/images/`. Third-party image attribution and original license links are available at `/credits/images.html`; these assets retain their original licenses. The hero is an AI-generated illustration and does not depict a verified platform member. No production membership totals, association partnerships or government endorsement are claimed.
+
+## Code organization
+
+See [folder structure and conventions](docs/architecture/README.md). All local image files are in `public/images`; attribution is served at `/credits/images.html` and source/license metadata is in `docs/assets/image-sources.json`.

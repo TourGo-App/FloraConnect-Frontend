@@ -1,7 +1,4 @@
-export const apiBaseUrl = (
-  import.meta.env.VITE_API_BASE_URL?.trim() ||
-  (import.meta.env.DEV ? 'http://localhost:3001/api' : 'https://flora-connect-backend-gules.vercel.app/api')
-).replace(/\/+$/, '');
+import { apiBaseUrl } from "../../config/env";
 
 export async function checkApiHealth(signal: AbortSignal): Promise<void> {
   const response = await fetch(`${apiBaseUrl}/health`, {

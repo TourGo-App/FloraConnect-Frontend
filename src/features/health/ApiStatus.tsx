@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { checkApiHealth } from './api';
+import { checkApiHealth } from '../../services/api/health';
 
 export default function ApiStatus() {
   const [status, setStatus] = useState<'checking' | 'connected' | 'unavailable'>('checking');
