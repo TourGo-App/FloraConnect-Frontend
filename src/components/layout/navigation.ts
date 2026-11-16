@@ -1,16 +1,17 @@
 export const navigationLinks = [
   { label: "Home", to: "/" },
-  { label: "Explore Flowers", to: "/flowers" },
+  { label: "Flowers & Plants", to: "/flowers" },
   { label: "Growers", to: "/growers" },
   { label: "Associations", to: "/associations" },
   { label: "Events", to: "/events" },
   { label: "Announcements", to: "/announcements" },
+    { label: "World Flower Varieties", to: "/flowers?tab=varieties" },
 ] as const;
 
 export const footerLinks = [
   navigationLinks[0],
   navigationLinks[1],
-  navigationLinks[4],
+  navigationLinks.find((link) => link.to === "/events")!,
   { label: "Contact", to: "/contact" },
 ] as const;
 

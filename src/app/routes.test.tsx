@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { routeObjects } from "./routes";
 
 const routeCases: [string, RegExp][] = [
-  ["/flowers", /^Flowers$/],
+  ["/flowers", /^Flowers & Plants$/],
   ["/associations", /^Associations$/],
   ["/announcements", /^Announcements$/],
   ["/login", /^Login$/],
@@ -12,6 +12,8 @@ const routeCases: [string, RegExp][] = [
   ["/profile", /^Profile$/],
   ["/logout", /^Logout$/],
   ["/growers", /^Growers$/],
+  ["/growers/sample-grower-id", /^Grower Profile$/],
+  ["/flowers/sample-listing-id", /^Flower Listing$/],
   ["/events", /^Events$/],
   ["/contact", /^Contact$/],
   ["/privacy", /^Privacy Policy$/],
@@ -48,6 +50,95 @@ describe("application routes", () => {
     renderAt("/");
 
     expect(await screen.findByRole("heading", { level: 1 })).toBeVisible();
+  });
+
+  it("keeps unavailable details and API retry controls out of the footer", async () => {
+    renderAt("/");
+
+    await screen.findByRole("heading", { level: 1 });
+    const footer = screen.getByRole("contentinfo");
+
+    expect(
+      within(footer).getByRole("link", { name: "Contact FloraConnect" }),
+    ).toHaveAttribute("href", "/contact");
+    expect(
+      within(footer).queryByText("Verified details coming soon"),
+    ).not.toBeInTheDocument();
+    expect(
+      within(footer).queryByText("Official social links coming soon"),
+    ).not.toBeInTheDocument();
+    expect(
+      within(footer).queryByRole("link", { name: "Image credits" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(footer).queryByText("Connection temporarily unavailable"),
+    ).not.toBeInTheDocument();
+    expect(
+      within(footer).queryByRole("button", { name: "Retry" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(footer).getByText("Together for a greener, blooming Sri Lanka"),
+    ).toBeVisible();
+    expect(
+      within(footer).queryByText("Sri Lanka's Flower Community"),
+    ).not.toBeInTheDocument();
+    expect(footer.querySelector(".footer-tagline svg")).not.toBeInTheDocument();
+  });
+
+  it("labels featured flowers as examples and links the hero join action to registration", async () => {
+    const router = renderAt("/");
+
+    expect(
+      await screen.findByText(
+        /illustrative examples, not current listings from growers/i,
+      ),
+    ).toBeVisible();
+
+    fireEvent.click(screen.getByRole("link", { name: "Join Our Community" }));
+
+    expect(
+      await screen.findByRole("heading", { name: "Register" }),
+    ).toBeVisible();
+    expect(router.state.location.pathname).toBe("/register");
+  });
+
+  it("shows the community, announcements and getting-started homepage previews", async () => {
+    renderAt("/");
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Find Your Flower Community",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "News From FloraConnect" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "A Simple Way to Get Started" }),
+    ).toBeVisible();
+    expect(screen.getAllByText("Sample preview")).toHaveLength(3);
+    expect(
+      screen.getByText(/No specific association or endorsement is represented/),
+    ).toBeVisible();
+    const associationSection = screen.getByRole("region", {
+      name: "Find Your Flower Community",
+    });
+    const announcementSection = screen.getByRole("region", {
+      name: "News From FloraConnect",
+    });
+    expect(
+      within(associationSection)
+        .getAllByRole("link")
+        .find((link) => link.classList.contains("text-link")),
+    ).toHaveAttribute("href", "/associations");
+    expect(
+      within(announcementSection)
+        .getAllByRole("link")
+        .find((link) => link.classList.contains("text-link")),
+    ).toHaveAttribute("href", "/announcements");
+    expect(
+      screen.getByRole("link", { name: "Create an account" }),
+    ).toHaveAttribute("href", "/register");
   });
 
   it.each(routeCases)("renders %s", async (path, heading) => {
@@ -96,11 +187,11 @@ describe("application routes", () => {
     fireEvent.click(
       within(
         screen.getByRole("navigation", { name: "Main navigation" }),
-      ).getByRole("link", { name: "Explore Flowers" }),
+      ).getByRole("link", { name: "Flowers & Plants" }),
     );
 
     expect(
-      await screen.findByRole("heading", { name: "Flowers" }),
+      await screen.findByRole("heading", { name: "Flowers & Plants" }),
     ).toBeVisible();
     expect(router.state.location.pathname).toBe("/flowers");
     expect(
@@ -123,6 +214,35 @@ describe("application routes", () => {
     ).toBeVisible();
   });
 
+  it.each([
+    [
+      "/flowers/sample-listing-id",
+      "Flower Listing",
+      "Flower listing details will appear here when the grower listings service is connected.",
+      "Back to Flowers & Plants",
+      "/flowers",
+    ],
+    [
+      "/growers/sample-grower-id",
+      "Grower Profile",
+      "Public grower profile details will appear here when the grower profiles service is connected.",
+      "Back to Growers",
+      "/growers",
+    ],
+  ])(
+    "renders the %s detail placeholder without implying a record was fetched",
+    async (path, title, message, backLink, href) => {
+      renderAt(path);
+
+      expect(await screen.findByRole("heading", { name: title })).toBeVisible();
+      expect(screen.getByText(message)).toBeVisible();
+      expect(screen.getByRole("link", { name: backLink })).toHaveAttribute(
+        "href",
+        href,
+      );
+    },
+  );
+
   it("searches the catalogue from the header", async () => {
     const router = renderAt("/");
     fireEvent.click(screen.getByRole("button", { name: "Search catalogue" }));
@@ -139,6 +259,87 @@ describe("application routes", () => {
     expect(router.state.location.search).toBe("?q=orchid");
   });
 
+  it("separates grower availability from worldwide reference varieties", async () => {
+    renderAt("/flowers");
+    expect(
+      await screen.findByRole("heading", {
+        name: "No grower flower listings yet",
+      }),
+    ).toBeVisible();
+    const tabs = screen.getByRole("navigation", { name: "Main navigation" });
+    expect(
+      within(tabs).getByRole("link", { name: "Flowers & Plants" }),
+    ).toHaveAttribute("aria-current", "page");
+    expect(
+      screen.getByText(
+        "Browse flower plants offered by registered growers and nurseries across Sri Lanka.",
+      ),
+    ).toBeVisible();
+    expect(
+      screen.getByLabelText("Published listing count unavailable"),
+    ).toHaveTextContent("—");
+    expect(
+      screen.getByRole("searchbox", { name: "Search flower or plant name" }),
+    ).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Plant type" })).toBeVisible();
+    expect(screen.getByRole("combobox", { name: "Location" })).toBeVisible();
+    expect(
+      screen.getByRole("combobox", { name: "Grower or nursery" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: "Explore World Flower Varieties" }),
+    ).toHaveAttribute("href", "/flowers?tab=varieties");
+    expect(screen.getByRole("link", { name: "View Growers" })).toHaveAttribute(
+      "href",
+      "/growers",
+    );
+    expect(screen.queryByRole("article")).not.toBeInTheDocument();
+    fireEvent.click(
+      within(tabs).getByRole("link", { name: "World Flower Varieties" }),
+    );
+    expect(
+      await screen.findByRole("heading", { name: "Acacia" }),
+    ).toBeVisible();
+    expect(screen.getAllByRole("article")).toHaveLength(40);
+    expect(
+      within(tabs).getByRole("link", { name: "World Flower Varieties" }),
+    ).toHaveAttribute("aria-current", "page");
+    expect(
+      within(tabs).getByRole("link", { name: "Flowers & Plants" }),
+    ).not.toHaveAttribute("aria-current");
+    fireEvent.click(
+      within(tabs).getByRole("link", { name: "Flowers & Plants" }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "No grower flower listings yet",
+      }),
+    ).toBeVisible();
+    expect(screen.queryByRole("article")).not.toBeInTheDocument();
+  });
+
+  it("shows a no-match state and resets grower filters", async () => {
+    renderAt("/flowers");
+    fireEvent.change(
+      screen.getByRole("searchbox", { name: "Search flower or plant name" }),
+      { target: { value: "orchid" } },
+    );
+
+    expect(await screen.findByText("No matching plants found")).toBeVisible();
+    fireEvent.click(
+      within(
+        screen.getByText("No matching plants found").parentElement!,
+      ).getByRole("button", {
+        name: "Reset Filters",
+      }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "No grower flower listings yet",
+      }),
+    ).toBeVisible();
+  });
+
   it("clears filters after an empty catalogue search", async () => {
     const router = renderAt("/flowers?q=unavailable-flower");
     expect(
@@ -148,15 +349,15 @@ describe("application routes", () => {
     expect(
       await screen.findByRole("heading", { name: "Acacia" }),
     ).toBeVisible();
-    expect(router.state.location.search).toBe("");
+    expect(router.state.location.search).toBe("?tab=varieties");
   });
 
   it("paginates the complete catalogue and resets the page when searching", async () => {
-    const router = renderAt("/flowers");
+    const router = renderAt("/flowers?tab=varieties");
     await screen.findByRole("heading", { name: "Flowers" });
     expect(screen.getAllByRole("article")).toHaveLength(40);
     fireEvent.click(screen.getByRole("button", { name: "Next" }));
-    expect(router.state.location.search).toBe("?page=2");
+    expect(router.state.location.search).toBe("?tab=varieties&page=2");
     expect(screen.getByText(/Page 2 of/)).toBeVisible();
     fireEvent.change(
       screen.getByRole("searchbox", { name: "Search flowers" }),

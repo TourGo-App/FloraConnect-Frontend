@@ -9,6 +9,8 @@ import CommunityPage from "../pages/CommunityPage";
 import LoginPage from "../pages/LoginPage";
 import RegistrationPage from "../pages/Registation";
 import FlowerCatalogueRoute from "../pages/FlowerCatalogueRoute";
+import GrowerDirectoryDetailPlaceholder from "../pages/GrowerDirectoryDetailPlaceholder";
+import GrowersPage from "../pages/GrowersPage";
 import {
   loadSuperAdmin,
   loadPlatformAdmin,
@@ -67,6 +69,10 @@ export const routeObjects: RouteObject[] = [
           },
           {
             path: "growers",
+            element: <GrowersPage />,
+          },
+          {
+            path: "growers-legacy",
             element: (
               <CommunityPage
                 title="Growers"
@@ -74,6 +80,10 @@ export const routeObjects: RouteObject[] = [
                 message="No verified grower profiles have been published yet."
               />
             ),
+          },
+          {
+            path: "growers/:id",
+            element: <GrowersPage />,
           },
           {
             path: "events",
@@ -118,6 +128,10 @@ export const routeObjects: RouteObject[] = [
           {
             path: "flowers",
             element: <FlowerCatalogueRoute />,
+          },
+          {
+            path: "flowers/:id",
+            element: <GrowerDirectoryDetailPlaceholder type="flower" />,
           },
           {
             path: "associations",
